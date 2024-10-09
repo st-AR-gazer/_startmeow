@@ -1,5 +1,8 @@
 [meta]
-name = ""
+name = "startmeow"
 author = "ar....."
 version = "0.1.0"
-category = ""
+category = "Fun"
+
+[script]
+exports = [ "src/Exports/Export.as" ]
