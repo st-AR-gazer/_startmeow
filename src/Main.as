@@ -14,6 +14,7 @@ void CoroutinePlayMeow(const string &in soundID, float delay) {
     if (soundID == "") {
         fileToPlay = GetRandomMeowSound();
     } else {
+        if (!soundID.EndsWith(".wav")) soundID += ".wav";
         fileToPlay = soundID;
     }
 
