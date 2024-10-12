@@ -2,28 +2,40 @@ void Main() {
     InitArrays();
 }
 
-void startmeow_loc(const string &in soundID = "", int amount = 1, float delay = -1.0) {
-    for (int i = 0; i < amount; i++) {
-        startnew(CoroutinePlayMeow(soundID, delay));
+array<string> meowPaths;
+
+void InitArrays() {
+    for (int i = 1; i <= 17; i++) {
+        meowPaths.InsertLast("src/MoewSounds/meow" + i + ".wav");
     }
 }
 
-void CoroutinePlayMeow(const string &in soundID, float delay) {
-    string fileToPlay;
+void startmeow_loc(const string &in soundID = "", int amount = 1, int delay = -1) {
+    string userdata = soundID + "|" + amount + "|" + delay;
+    startnew(CoroutineFuncUserdataString(CoroutinePlayMeows), userdata);
+}
 
-    if (soundID == "") {
-        fileToPlay = GetRandomMeowSound();
-    } else {
-        if (!soundID.EndsWith(".wav")) soundID += ".wav";
-        fileToPlay = soundID;
-    }
+void CoroutinePlayMeows(const string &in userdata) {
+    array<string> data = userdata.Split("|");
+    string soundID = data[0];
+    int amount = Text::ParseInt(data[1]);
+    int delay = Text::ParseInt(data[2]);
 
-    PlayMeowSound(fileToPlay);
+    for (int i = 0; i < amount; i++) {
+        string fileToPlay;
 
-    if (delay <= 0) {
-        yield();
-    } else {
-        sleep(delay * 1000);
+        if (soundID == "") {
+            fileToPlay = GetRandomMeowSound();
+        } else {
+            if (!soundID.EndsWith(".wav")) soundID += ".wav";
+            fileToPlay = soundID;
+        }
+
+        PlayMeowSound(fileToPlay);
+
+        if (delay > 0) {
+            sleep(delay * 1000);
+        }
     }
 }
 
@@ -33,7 +45,5 @@ void PlayMeowSound(const string &in file) {
 }
 
 string GetRandomMeowSound() {
-    array<string> sounds = meowPaths;
-
-    return sounds[Math::Rand(0, sounds.Length - 1)];
+    return meowPaths[Math::Rand(0, meowPaths.Length - 1)];
 }
