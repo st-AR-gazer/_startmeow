@@ -1,12 +1,21 @@
+array<string> meowPaths;
+array<Audio::Sample@> meowSamples;
+
 void Main() {
-    InitArrays();
+    InitMeowSounds();
 }
 
-array<string> meowPaths;
+void InitMeowSounds() {
+    for (int i = 0; i <= 16; i++) {
 
-void InitArrays() {
-    for (int i = 1; i <= 17; i++) {
-        meowPaths.InsertLast("src/MoewSounds/meow" + i + ".wav");
+        string path = "src/MoewSounds/meow" + i + ".wav";
+
+        meowPaths.InsertLast(path);
+
+        print(meowPaths[i]);
+
+        auto meowsound = Audio::LoadSample(meowPaths[i]);
+        meowSamples.InsertLast(meowsound);
     }
 }
 
@@ -22,16 +31,20 @@ void CoroutinePlayMeows(const string &in userdata) {
     int delay = Text::ParseInt(data[2]);
 
     for (int i = 0; i < amount; i++) {
-        string fileToPlay;
+        Audio::Sample@ sampleToPlay = null;
 
         if (soundID == "") {
-            fileToPlay = GetRandomMeowSound();
+            @sampleToPlay = GetRandomMeowSample();
         } else {
-            if (!soundID.EndsWith(".wav")) soundID += ".wav";
-            fileToPlay = soundID;
+            int index = GetMeowIndexBySoundID(soundID);
+            if (index >= 0 && index < meowSamples.Length) {
+                @sampleToPlay = meowSamples[index];
+            }
         }
 
-        PlayMeowSound(fileToPlay);
+        if (sampleToPlay !is null) {
+            PlayMeowSample(sampleToPlay);
+        }
 
         if (delay > 0) {
             sleep(delay * 1000);
@@ -39,11 +52,19 @@ void CoroutinePlayMeows(const string &in userdata) {
     }
 }
 
-void PlayMeowSound(const string &in file) {
-    auto meowsound = Audio::LoadSample(file);
-    Audio::Play(meowsound);
+void PlayMeowSample(Audio::Sample@ sample) {
+    if (sample !is null) {
+        Audio::Play(sample);
+    }
 }
 
-string GetRandomMeowSound() {
-    return meowPaths[Math::Rand(0, meowPaths.Length - 1)];
+Audio::Sample@ GetRandomMeowSample() {
+    return meowSamples[Math::Rand(0, meowSamples.Length - 1)];
+}
+
+int GetMeowIndexBySoundID(const string &in soundID) {
+    if (soundID.StartsWith("meow")) {
+        return Text::ParseInt(soundID.SubStr(4)) - 1;
+    }
+    return -1;
 }
