@@ -12,8 +12,6 @@ void InitMeowSounds() {
 
         meowPaths.InsertLast(path);
 
-        print(meowPaths[i]);
-
         auto meowsound = Audio::LoadSample(meowPaths[i]);
         meowSamples.InsertLast(meowsound);
     }
