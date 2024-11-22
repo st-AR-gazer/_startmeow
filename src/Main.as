@@ -17,8 +17,8 @@ void InitMeowSounds() {
     }
 }
 
-void startmeow_loc(const string &in soundID = "", int amount = 1, int delay = -1) {
-    string userdata = soundID + "|" + amount + "|" + delay;
+void startmeow_loc(const string &in soundID = "", int amount = 1, int delay = -1, float gain = 1) {
+    string userdata = soundID + "|" + amount + "|" + delay + "|" + gain;
     startnew(CoroutineFuncUserdataString(CoroutinePlayMeows), userdata);
 }
 
