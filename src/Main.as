@@ -17,8 +17,8 @@ void InitMeowSounds() {
     }
 }
 
-void startmeow_loc(const string &in soundID = "", int amount = 1, int delay = -1) {
-    string userdata = soundID + "|" + amount + "|" + delay;
+void startmeow_loc(const string &in soundID = "", int amount = 1, int delay = -1, float gain = 1) {
+    string userdata = soundID + "|" + amount + "|" + delay + "|" + gain;
     startnew(CoroutineFuncUserdataString(CoroutinePlayMeows), userdata);
 }
 
@@ -27,6 +27,11 @@ void CoroutinePlayMeows(const string &in userdata) {
     string soundID = data[0];
     int amount = Text::ParseInt(data[1]);
     int delay = Text::ParseInt(data[2]);
+    float gain = 1;
+    if (data.Length() == 4)
+    {
+        gain = Text::ParseFloat(data[3]);
+    }
 
     for (int i = 0; i < amount; i++) {
         Audio::Sample@ sampleToPlay = null;
@@ -41,7 +46,7 @@ void CoroutinePlayMeows(const string &in userdata) {
         }
 
         if (sampleToPlay !is null) {
-            PlayMeowSample(sampleToPlay);
+            PlayMeowSample(sampleToPlay, gain);
         }
 
         if (delay > 0) {
@@ -50,9 +55,9 @@ void CoroutinePlayMeows(const string &in userdata) {
     }
 }
 
-void PlayMeowSample(Audio::Sample@ sample) {
+void PlayMeowSample(Audio::Sample@ sample, float gain = 1) {
     if (sample !is null) {
-        Audio::Play(sample);
+        Audio::Play(sample, gain);
     }
 }
 
