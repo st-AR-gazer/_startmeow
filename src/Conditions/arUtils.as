@@ -188,7 +188,11 @@ namespace _IO {
 namespace _Game {
     bool IsMapLoaded() {
         CTrackMania@ app = cast<CTrackMania>(GetApp());
+#if TMNEXT || MP4
         if (app.RootMap is null) return false;
+#else
+        if (app.Challenge is null) return false;
+#endif
         return true;
     }
 
