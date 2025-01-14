@@ -28,7 +28,7 @@ void CoroutinePlayMeows(const string &in userdata) {
     int amount = Text::ParseInt(data[1]);
     int delay = Text::ParseInt(data[2]);
     float gain = 1;
-    if (data.Length() == 4)
+    if (data.Length == 4)
     {
         gain = Text::ParseFloat(data[3]);
     }
